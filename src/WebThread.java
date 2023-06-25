@@ -7,16 +7,21 @@ import java.net.URLConnection;
 class WebThread implements Runnable {
     private final URI uri;
     private final String name;
+    private String response;
+    private Thread thread;
 
     WebThread(URI uri, String name) {
         this.uri = uri;
         this.name = name;
+
+        thread = new Thread(this, name);
+        thread.start();
     }
 
     @Override
     public void run() {
         try {
-            URLConnection connection = this.uri.toURL().openConnection();
+            URLConnection connection = uri.toURL().openConnection();
             BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), "windows-1251") );
 
             String s;
@@ -26,12 +31,21 @@ class WebThread implements Runnable {
                 htmlResponse.append(s);
             }
             // htmlResponse = new StringBuilder(new String(htmlResponse.toString().getBytes(), "Cp1251"));
-            if (htmlResponse.toString().contains(this.name)) {
-                System.out.println(this.uri);
+            if (htmlResponse.toString().contains(name)) {
+                this.response = String.valueOf(uri);
             }
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+    }
+
+    public Thread getThread() {
+        return thread;
+    }
+
+    public String getResponse() {
+        return this.response;
     }
 }

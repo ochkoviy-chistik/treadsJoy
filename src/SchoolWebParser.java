@@ -3,7 +3,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 public class SchoolWebParser {
-    private final ArrayList<Thread> threads = new ArrayList<>();
+    private final ArrayList<WebThread> threads = new ArrayList<>();
     private final String name;
 
     public SchoolWebParser(String name) {
@@ -23,13 +23,33 @@ public class SchoolWebParser {
                     )
             );
 
-            this.threads.add(new Thread(new WebThread(uri, name) ));
+            threads.add(new WebThread(uri, name) );
         }
     }
 
-    public void run() {
-        for (int i = 0; i < 48; ++i) {
-            this.threads.get(i).start();
+    public boolean isFinished() {
+        for (WebThread webThread : threads) {
+            if (webThread.getThread().getState() == Thread.State.RUNNABLE) return false;
         }
+        return true;
+    }
+
+    public ArrayList<String> getResponse() {
+        ArrayList<String> responseList = new ArrayList<>();
+        String response;
+
+        int i = 0;
+
+        while (i < 48) {
+            if (threads.get(i).getThread().getState() == Thread.State.TERMINATED) {
+                response = threads.get(i).getResponse();
+
+                if (response != null ) responseList.add(response);
+
+                i++;
+            }
+        }
+
+        return responseList;
     }
 }
