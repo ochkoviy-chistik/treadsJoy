@@ -27,13 +27,6 @@ public class SchoolWebParser {
         }
     }
 
-    public boolean isFinished() {
-        for (WebThread webThread : threads) {
-            if (webThread.getThread().getState() == Thread.State.RUNNABLE) return false;
-        }
-        return true;
-    }
-
     public ArrayList<String> getResponse() {
         ArrayList<String> responseList = new ArrayList<>();
         String response;

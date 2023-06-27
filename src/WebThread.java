@@ -8,7 +8,7 @@ class WebThread implements Runnable {
     private final URI uri;
     private final String name;
     private String response;
-    private Thread thread;
+    private final Thread thread;
 
     WebThread(URI uri, String name) {
         this.uri = uri;
